@@ -1,156 +1,163 @@
-# B2World — AI Recruitment & Workforce Management Platform (MVP)
+# B2World — AI Recruitment & Workforce Intelligence Platform 🚀
 
-This is a working build of the **"Must Have" modules** from your project understanding
-document: Auth (Module 1), Job Management (Module 2), AI Resume Screening (Module 3),
-and the Candidate Pipeline (Module 6). It runs end-to-end on your machine with a real
-database, real password hashing, real JWT auth, and a real (optionally AI-powered)
-resume screener.
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-009688.svg?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB.svg?style=flat&logo=React&logoColor=black)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-5.4.0-646CFF.svg?style=flat&logo=Vite&logoColor=white)](https://vitejs.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-336791.svg?style=flat&logo=PostgreSQL&logoColor=white)](https://supabase.com)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-AI%20Screening-8E75B2.svg?style=flat&logo=Google&logoColor=white)](https://ai.google.dev/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Modules 4, 5, 7–11 (Voice AI/Twilio, Calendar/Zoom scheduling, Project & Sprint
-management, Analytics) are **not built** — they need paid third-party accounts
-(Twilio, Google Cloud, Zoom) that only you can set up, and Project/Sprint management
-is a large separate build. See "What's next" at the bottom for how to extend this.
+> **Developed by Khushi during Software Engineering Internship at B2World.**  
+> An intelligent, end-to-end recruitment platform that automates candidate screening, computes real-time ATS match scores using **Google Gemini AI**, routes candidates through dynamic Kanban pipelines, and provides self-service application tracking.
 
 ---
 
-## 1. What's included
+## 🌟 Key Highlights & Features
+
+### 🧠 1. AI-Powered Resume Screening & ATS Scorer
+- **Multimodal Parser**: Extracts and analyzes text from **PDF, DOCX, and TXT** resume uploads.
+- **Google Gemini Integration**: Uses state-of-the-art Gemini LLMs to evaluate candidate qualifications, match required skills, and generate an executive AI summary with actionable recommendations.
+- **Automated Score-Based Pipeline Routing**:
+  - 🟢 **Score ≥ 80%**: Automatically routed to **Shortlisted**
+  - 🟡 **60% ≤ Score < 80%**: Automatically routed to **Screened**
+  - 🔴 **Score < 60%**: Automatically routed to **Rejected** (with constructive feedback)
+
+### 📊 2. Interactive Recruiter Kanban Pipeline
+- **Visual Drag-and-Drop / Stage Selectors**: Move candidates seamlessly across recruitment stages (`Applied` ➔ `Screened` ➔ `Shortlisted` ➔ `Interview Scheduled` ➔ `Technical Round` ➔ `HR Round` ➔ `Selected` ➔ `Joined`).
+- **Feedback & Notes Log**: Multi-user feedback timeline allowing recruiters, hiring managers, and team leads to log timestamped evaluation notes.
+- **Custom Candidate Tagging**: Add custom labels (e.g., *Top Talent*, *Referral*, *Remote*, *Follow Up*) for fast filtering.
+
+### 🔎 3. Public Application Tracker (`/track-application`)
+- **Self-Service Candidate Portal**: Candidates can search by their email address to view real-time application progress, stage updates, and interview timelines without logging in.
+
+### 🔐 4. Enterprise-Grade Role-Based Access Control (RBAC)
+- **Granular Permissions**: Strict backend authorization guards protecting candidate data and administrative actions across 6 roles:
+  - **Super Admin**: Full administrative control and user management.
+  - **HR Manager**: Job approvals, candidate offers, and pipeline oversight.
+  - **Recruiter**: Job posting, resume parsing, candidate communications, and Kanban management.
+  - **Project Manager / Team Lead / Developer**: Interview evaluations and team notes.
+- **JWT + Bcrypt Security**: Secure cryptographic tokens, salted password hashing, and single-use time-limited password reset tokens.
+
+### 🎨 5. Modern Obsidian Dark UI & Mobile Responsiveness
+- **High-End Design System**: Crafted with glassmorphism, tailored gradients, and smooth micro-animations.
+- **Mobile First**: Full responsive navigation with animated mobile drawer menu tested across smartphone, tablet, and desktop viewports.
+
+---
+
+## 🛠️ Architecture & Tech Stack
 
 ```
-b2world/
-├── backend/          FastAPI + SQLAlchemy + JWT auth + SQLite (or Postgres)
+b2world-recruitment/
+├── backend/                  # FastAPI REST API Backend
 │   ├── app/
-│   │   ├── main.py           FastAPI app entrypoint
-│   │   ├── config.py         Settings (reads .env)
-│   │   ├── database.py       DB engine/session
-│   │   ├── models.py         User, Job, Candidate, PasswordResetToken tables
-│   │   ├── schemas.py        Request/response validation
-│   │   ├── security.py       Password hashing + JWT
-│   │   ├── deps.py           Auth dependencies / role guards
+│   │   ├── main.py           # Application entrypoint & CORS middleware
+│   │   ├── config.py         # Pydantic environment configuration
+│   │   ├── database.py       # SQLAlchemy engine (Supabase PostgreSQL / SQLite)
+│   │   ├── models.py         # Relational database models
+│   │   ├── schemas.py        # Pydantic request/response schemas
+│   │   ├── security.py       # Bcrypt hashing & JWT token handling
+│   │   ├── deps.py           # RBAC dependency guards
 │   │   ├── routers/
-│   │   │   ├── auth.py       register, login, forgot/reset password, /me
-│   │   │   ├── jobs.py       job CRUD + public listing
-│   │   │   └── candidates.py resume upload, ATS scoring, candidate tags/labels, notes log, Kanban stage updates
+│   │   │   ├── auth.py       # Login, register, password reset, /me
+│   │   │   ├── jobs.py       # Job CRUD & public listings
+│   │   │   └── candidates.py # Resume uploads, AI ATS routing, notes, tags
 │   │   └── utils/
-│   │       ├── email.py          SendGrid or console-print fallback
-│   │       ├── resume_parser.py  PDF/DOCX/TXT text extraction
-│   │       └── ai_screening.py   Gemini scoring or local fallback scorer
-│   ├── seed.py            Creates one demo user per role
-│   ├── requirements.txt
-│   └── .env.example
+│   │       ├── ai_screening.py   # Google Gemini API & fallback engine
+│   │       ├── resume_parser.py  # PDF/DOCX/TXT text extractor
+│   │       └── email.py          # Email notification service
+│   ├── seed.py               # Demo data seeder
+│   └── requirements.txt      # Python dependencies
 │
-└── frontend/         React + Vite
-    └── src/
-        ├── pages/     Login, Register, ForgotPassword, ResetPassword,
-        │              Home, Jobs, JobDetail, PostJob, Candidates, Dashboard
-        ├── components/Navbar, AuthLayout, ProtectedRoute
-        ├── context/AuthContext.jsx
-        └── api/client.js
+└── frontend/                 # React 18 + Vite SPA Frontend
+    ├── src/
+    │   ├── pages/            # Home, Jobs, JobDetail, Candidates, Dashboard, TrackApplication
+    │   ├── components/       # Navbar, AuthLayout, ProtectedRoute, Icons
+    │   ├── context/          # Global AuthContext & state management
+    │   ├── api/              # Axios client with interceptors
+    │   └── styles/           # Obsidian dark CSS design system
+    ├── vercel.json           # SPA rewrite rules
+    └── package.json          # Node dependencies
 ```
 
-## 2. Prerequisites
+---
 
-- Python 3.10+
-- Node.js 18+
-- (Optional) A Gemini API key for real AI resume scoring
-- (Optional) A SendGrid API key for real emails
+## 🔑 Demo Accounts for Review
 
-Nothing else is required — the app runs with zero paid accounts using SQLite and
-local fallbacks.
+The platform includes pre-seeded demo accounts (Password: `Demo@1234`):
 
-## 3. Run the backend
+| Role | Email | Capabilities |
+| :--- | :--- | :--- |
+| **Super Admin** | `admin@b2world.demo` | Full system control, analytics & user management |
+| **Recruiter** | `recruiter@b2world.demo` | Job posting, AI resume screening, Kanban pipeline, candidate notes |
+| **HR Manager** | `hr@b2world.demo` | Candidate offers, hiring analytics, interview scheduling |
+| **Candidate** | *Public / No login* | Explore job board, apply with resume, public tracking |
 
+---
+
+## 🚀 Quickstart & Local Setup
+
+### 1. Prerequisites
+- **Node.js** (v18+)
+- **Python** (v3.10+)
+- **Git**
+
+### 2. Backend Setup
 ```bash
 cd backend
-python3 -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+python -m venv venv
+
+# Activate virtual environment:
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-cp .env.example .env            # edit if you want Postgres / Gemini / SendGrid
-python3 seed.py                 # creates demo users for every role (optional but recommended)
+# Seed sample data (users, jobs, candidates)
+python seed.py
 
+# Start FastAPI server
 uvicorn app.main:app --reload --port 8000
 ```
+API Documentation (Swagger UI) available at: **http://localhost:8000/docs**
 
-Backend is now at **http://localhost:8000**. Interactive API docs (Swagger, as your
-plan called for) are auto-generated at **http://localhost:8000/docs**.
-
-### Demo accounts (created by `seed.py`), all with password `Demo@1234`
-| Email | Role |
-|---|---|
-| admin@b2world.demo | Super Admin |
-| hr@b2world.demo | HR Manager |
-| recruiter@b2world.demo | Recruiter |
-| pm@b2world.demo | Project Manager |
-| lead@b2world.demo | Team Lead |
-| dev@b2world.demo | Developer |
-
-Candidates aren't seeded — register one from the app's Register page.
-
-## 4. Run the frontend
-
-Open a **second terminal**:
-
+### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
-cp .env.example .env            # only needed if backend isn't on localhost:8000
 npm run dev
 ```
+Open your browser at: **http://localhost:5173**
 
-Frontend is now at **http://localhost:5173**.
+---
 
-## 5. Try it out
+## ☁️ Deployment Guide
 
-1. Go to `http://localhost:5173/register` and create an account, or log in with
-   `hr@b2world.demo` / `Demo@1234`.
-2. As HR/Recruiter/Super Admin: **Post a job** → publish it.
-3. Log out, go to **Jobs**, open the job, and **apply** with a resume (PDF/DOCX/TXT).
-   You'll immediately see the AI-computed ATS score.
-4. Log back in as HR and open **Dashboard → View pipeline** to see the candidate on
-   the Kanban board. Move them between stages with the dropdown on each card.
-5. Try **Forgot password** on the login page — since no email provider is configured
-   by default, the reset link is printed straight to the **backend terminal**. Copy
-   it into your browser to complete the reset.
+### Backend on [Render](https://render.com) (or Railway)
+1. Create a **New Web Service** linked to this repo.
+2. Root Directory: `backend` (or `b2world_mvp_recruitment/backend`)
+3. Build Command: `pip install -r requirements.txt`
+4. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Set Environment Variables:
+   - `DATABASE_URL`: `postgresql://postgres:[PASSWORD]@[HOST]:5432/postgres?sslmode=require`
+   - `GEMINI_API_KEY`: `your_gemini_api_key`
+   - `SECRET_KEY`: `your_secret_key`
+   - `FRONTEND_ORIGIN`: `*`
 
-## 6. Turning on real AI scoring and real email (optional)
+### Frontend on [Vercel](https://vercel.com)
+1. Import GitHub repository into Vercel.
+2. Root Directory: `frontend` (or `b2world_mvp_recruitment/frontend`)
+3. Framework Preset: `Vite`
+4. Build Command: `npm run build`
+5. Output Directory: `dist`
+6. Set Environment Variable:
+   - `VITE_API_URL`: `https://your-backend.onrender.com`
 
-In `backend/.env`:
-- Set `GEMINI_API_KEY` to score resumes with Gemini 1.5 Flash instead of the local
-  keyword-matching fallback. No code changes needed — it's used automatically once set.
-- Set `SENDGRID_API_KEY` and `FROM_EMAIL` to send real password-reset emails instead
-  of printing them to the console.
+---
 
-## 7. Moving to Postgres / Neon (for deployment)
-
-In `backend/.env`, change:
-```
-DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
-```
-Then reinstall requirements (psycopg2-binary is already included) and restart —
-`Base.metadata.create_all` will create the tables on first run. For a real
-production rollout, replace this with Alembic migrations.
-
-## 8. Security notes (what's actually implemented)
-
-- Passwords are hashed with **bcrypt** (via passlib) — never stored in plain text.
-- Auth uses **JWT** access tokens (1 hour expiry by default, configurable).
-- Login and forgot-password return **identical generic responses** whether or not
-  the email exists, so neither endpoint can be used to enumerate registered users.
-- Password reset tokens are **single-use, time-limited, cryptographically random**,
-  and stored server-side so a token can be invalidated after use.
-- All job/candidate mutation endpoints are **role-gated** on the backend (not just
-  hidden in the UI) — tested that a `candidate`-role token gets a 403 on job creation.
-- File uploads are restricted to `.pdf/.docx/.txt`, size-capped at 5MB, and saved
-  under a randomly generated filename (the original filename is never trusted).
-
-## 9. What's next (matches your own Phase 3–5 roadmap)
-
-- **Module 4 (Voice AI)**: needs a Twilio (or Exotel) account + webhook setup.
-- **Module 5 (Scheduling)**: needs Google Calendar OAuth + Zoom/Teams API keys.
-- **Modules 7–10 (Project/Sprint mgmt)**: new tables + endpoints, same patterns as
-  Jobs/Candidates here — Gemini can generate tasks and suggest assignments the same
-  way it scores resumes.
-- **Module 11 (Analytics)**: once there's real usage data, add aggregation endpoints
-  and chart them with Recharts on the frontend.
-- **Deployment**: frontend → Vercel (`npm run build`, deploy `dist/`), backend →
-  Render/VPS (`uvicorn app.main:app`), database → Neon Postgres.
+## 👩‍💻 Author & Internship Credits
+- **Developer**: Khushi
+- **Internship**: Software Engineering / AI Internship at B2World
+- **Repository**: [github.com/khushi1-debug/b2world-recruitment](https://github.com/khushi1-debug/b2world-recruitment.git)
