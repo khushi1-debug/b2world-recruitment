@@ -133,30 +133,6 @@ Open your browser at: **http://localhost:5173**
 
 ---
 
-## ☁️ Deployment Guide
-
-### Backend on [Render](https://render.com) (or Railway)
-1. Create a **New Web Service** linked to this repo.
-2. Root Directory: `backend` (or `b2world_mvp_recruitment/backend`)
-3. Build Command: `pip install -r requirements.txt`
-4. Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-5. Set Environment Variables:
-   - `DATABASE_URL`: `postgresql://postgres:[PASSWORD]@[HOST]:5432/postgres?sslmode=require`
-   - `GEMINI_API_KEY`: `your_gemini_api_key`
-   - `SECRET_KEY`: `your_secret_key`
-   - `FRONTEND_ORIGIN`: `*`
-
-### Frontend on [Vercel](https://vercel.com)
-1. Import GitHub repository into Vercel.
-2. Root Directory: `frontend` (or `b2world_mvp_recruitment/frontend`)
-3. Framework Preset: `Vite`
-4. Build Command: `npm run build`
-5. Output Directory: `dist`
-6. Set Environment Variable:
-   - `VITE_API_URL`: `https://your-backend.onrender.com`
-
----
-
 ## 👩‍💻 Author & Internship Credits
 - **Developer**: Khushi
 - **Internship**: AI/ML Internship at B2World
