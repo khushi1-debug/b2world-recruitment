@@ -9,12 +9,20 @@ def extract_text(file_path: str) -> str:
     ext = os.path.splitext(file_path)[1].lower()
 
     if ext == ".pdf":
-        import fitz  # PyMuPDF
-        text_parts = []
-        with fitz.open(file_path) as doc:
-            for page in doc:
-                text_parts.append(page.get_text())
-        return "\n".join(text_parts)
+        try:
+            from pypdf import PdfReader
+            reader = PdfReader(file_path)
+            return "\n".join((page.extract_text() or "") for page in reader.pages)
+        except Exception:
+            try:
+                import fitz  # PyMuPDF fallback
+                text_parts = []
+                with fitz.open(file_path) as doc:
+                    for page in doc:
+                        text_parts.append(page.get_text())
+                return "\n".join(text_parts)
+            except Exception as e:
+                raise ValueError(f"Failed to extract PDF text: {str(e)}")
 
     if ext == ".docx":
         import docx
