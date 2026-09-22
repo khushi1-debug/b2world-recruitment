@@ -1,0 +1,42 @@
+# Node dependencies & build outputs
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python & Virtual Environments
+venv/
+backend/venv/
+__pycache__/
+backend/**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+.venv/
+
+# Environment variables & secrets
+.env
+backend/.env
+frontend/.env
+*.env.local
+
+# Databases & local uploads
+*.db
+*.sqlite
+*.sqlite3
+b2world.db
+backend/b2world.db
+backend/uploads/resumes/*
+!backend/uploads/resumes/.gitkeep
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
