@@ -7,7 +7,7 @@
 [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-AI%20Screening-8E75B2.svg?style=flat&logo=Google&logoColor=white)](https://ai.google.dev/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> **Developed by Khushi during Software Engineering Internship at B2World.**  
+> **Developed by Khushi during internship at B2World.**  
 > An intelligent, end-to-end recruitment platform that automates candidate screening, computes real-time ATS match scores using **Google Gemini AI**, routes candidates through dynamic Kanban pipelines, and provides self-service application tracking.
 
 ---
@@ -159,5 +159,5 @@ Open your browser at: **http://localhost:5173**
 
 ## 👩‍💻 Author & Internship Credits
 - **Developer**: Khushi
-- **Internship**: Software Engineering / AI Internship at B2World
+- **Internship**: AI/ML Internship at B2World
 - **Repository**: [github.com/khushi1-debug/b2world-recruitment](https://github.com/khushi1-debug/b2world-recruitment.git)
